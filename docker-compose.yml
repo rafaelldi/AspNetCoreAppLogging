@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  api:
+    build: .
+    container_name: api
+    ports:
+      - "8000:80"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: httpd.access
+    depends_on:
+      - fluentd
+
+  fluentd:
+    build: ./fluentd
+    container_name: fluentd
+    ports:
+      - 24224:24224
+    volumes:
+      - ./fluentd/conf:/fluentd/etc
+    depends_on:
+      - elasticsearch
+      - kibana
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.1
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+
+  kibana:
+    depends_on:
+      - elasticsearch
+    image: docker.elastic.co/kibana/kibana:6.6.1
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    ports:
+    - 5601:5601
