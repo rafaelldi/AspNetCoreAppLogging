@@ -17,7 +17,7 @@ namespace AspNetCoreAppLogging.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            _logger.LogInformation($"Id = {id}");
+            _logger.LogInformation("Id value is {@id}", id);
             return "value";
         }
     }
