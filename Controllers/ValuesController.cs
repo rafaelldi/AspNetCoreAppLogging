@@ -23,5 +23,13 @@ namespace AspNetCoreAppLogging.Controllers
             _logger.LogInformation("CurrentDate {@currentDate}", currentDate);
             return "value";
         }
+        
+        [HttpGet]
+        public ActionResult<string> GetException()
+        {
+            var exception = new NotImplementedException("This route isn't implemented yet :(");
+            _logger.LogError(exception, "Some exception");
+            return "value";
+        }
     }
 }
